@@ -60,7 +60,6 @@ const Work = () => {
             <img src={images.about01} alt="work.name" />
 
             <motion.div
-              whileInView={{ opacity: [0] }}
               whileHover={{ opacity: [0, 1] }}
               transition={{
                 duration: 0.25,
