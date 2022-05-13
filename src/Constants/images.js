@@ -22,6 +22,8 @@ import vue from "../assets/vue.png";
 import unity from "../assets/unity.png";
 import unreal from "../assets/unreal.png";
 
+import Nihal from "../assets/N.png";
+
 import about01 from "../assets/about01.png";
 import about02 from "../assets/about02.png";
 import about03 from "../assets/about03.png";
@@ -47,6 +49,7 @@ export default {
   css,
   figma,
   flutter,
+  Nihal,
   git,
   graphql,
   html,
