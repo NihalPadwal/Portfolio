@@ -60,6 +60,7 @@ const Work = () => {
             <img src={images.about01} alt="work.name" />
 
             <motion.div
+            whileInView={{opacity:[0]}}
               whileHover={{ opacity: [0, 1] }}
               transition={{
                 duration: 0.25,
@@ -94,7 +95,7 @@ const Work = () => {
           <div className="app__work-content app__flex">
             <h4 className="bold-text">yo</h4>
             <p className="p-text" style={{ marginTop: 10 }}>
-              workdex
+              workd content
             </p>
 
             <div className="app__work-tag app__flex">
