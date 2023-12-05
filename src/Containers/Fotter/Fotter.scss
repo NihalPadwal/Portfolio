@@ -69,12 +69,30 @@
 .app__footer-form {
   width: 60%;
   flex-direction: column;
-  margin: 1rem 2rem;
+  padding: 1rem 2rem;
+  background-color: var(--white-color);
+  border-radius: 10px;
+  margin-bottom: 20px;
 
   div {
     width: 100%;
 
-    margin: 0.75rem 0;
+    .error {
+      color: red;
+      margin-bottom: 10px;
+      font-size: 13px;
+      opacity: 0;
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
+
+  input {
+    width: 100%;
+
+    padding: 1.4rem 1rem;
     border-radius: 10px;
     cursor: pointer;
     background-color: var(--primary-color);
@@ -101,6 +119,23 @@
     &:hover {
       box-shadow: 0 0 25px var(--primary-color);
     }
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.95rem;
+    border: none;
+    border-radius: 7px;
+    background-color: var(--primary-color);
+
+    font-family: var(--font-base);
+    color: var(--secondary-color);
+    outline: none;
+  }
+
+  textarea {
+    height: 170px;
   }
 
   button {

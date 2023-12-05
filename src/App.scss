@@ -1,4 +1,5 @@
 .app {
+  position: relative;
   background-color: var(--primary-color);
   font-family: var(--font-base);
 }
@@ -104,6 +105,10 @@
   flex-direction: column;
 
   padding: 1rem;
+
+  position: sticky;
+  top: 50%;
+  left: 0;
 
   div {
     width: 40px;

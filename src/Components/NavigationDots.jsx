@@ -6,10 +6,10 @@ const NavigationDots = ({ active }) => {
     <div className="app__navigation">
       {[
         "home",
-        "about",
+        // "about",
         "work",
         "skills",
-        "testimonials",
+        // "testimonials",
         "contact",
       ].map((item, index) => (
         <Link

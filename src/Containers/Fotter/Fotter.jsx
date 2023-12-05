@@ -5,17 +5,50 @@ import { motion } from "framer-motion";
 import { AppWrap } from "../../Wrapper";
 import { images } from "../../Constants";
 import "./Fotter.scss";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import { gql, GraphQLClient } from "graphql-request";
+import axios from "axios";
 
 const Fotter = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { username, email, message } = formData;
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    setLoading(true);
+    const mutation = gql`
+      mutation MyMutation {
+        createTestimonial(data: { name: "${data.name}", email: "${data.email}", message: "${data.message}" }) {
+          id
+        }
+      }
+    `;
+
+    const graphQLClient = new GraphQLClient(process.env.REACT_APP_API, {
+      headers: {
+        authorization: `Bearer ${process.env.REACT_APP_TOKEN}`,
+      },
+    });
+
+    const res = await graphQLClient.request(mutation);
+
+    reset();
+    setIsFormSubmitted(true);
+
+    setLoading(false);
+
+    setTimeout(() => {
+      setIsFormSubmitted(false);
+    }, 2000);
+  };
 
   return (
     <>
@@ -36,41 +69,72 @@ const Fotter = () => {
         </div>
       </div>
 
-      <div className="app__footer-form app__flex">
-        <div className="app__flex">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="app__footer-form app__flex"
+      >
+        <div className="">
           <input
             className="p-text"
             type="text"
             placeholder="Your Name"
-            name="username"
-            value={username}
+            {...register("name", {
+              required: {
+                value: true,
+                message: "This Field is required!",
+              },
+            })}
           />
+
+          <p className={`error ${errors?.name && "active"}`}>
+            {errors?.name?.message || "text"}
+          </p>
         </div>
-        <div className="app__flex">
+        <div className="">
           <input
             className="p-text"
             type="email"
             placeholder="Your Email"
-            name="email"
-            value={email}
+            {...register("email", {
+              required: {
+                value: true,
+                message: "This Field is required!",
+              },
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Please input correct email",
+              },
+            })}
           />
+          <p className={`error ${errors?.email && "active"}`}>
+            {errors?.email?.message || "text"}
+          </p>
         </div>
         <div>
           <textarea
             className="p-text"
             placeholder="Your Message"
-            value={message}
-            name="message"
+            {...register("message", {
+              required: {
+                value: true,
+                message: "This Field is required!",
+              },
+            })}
           />
+          <p className={`error ${errors?.message && "active"}`}>
+            {errors?.message?.message || "text"}
+          </p>
         </div>
-        <button type="button" className="p-text">
+        <button type="submit" className="p-text" disabled={loading}>
           {!loading ? "Send Message" : "Sending..."}
         </button>
-      </div>
+      </form>
 
-      <div>
-        <h3 className="head-text">Thank you for getting in touch!</h3>
-      </div>
+      {isFormSubmitted && (
+        <div>
+          <h3 className="head-text">Thank you for getting in touch!</h3>
+        </div>
+      )}
     </>
   );
 };

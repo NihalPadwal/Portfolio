@@ -1,10 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.scss";
 import { motion } from "framer-motion";
 import { images } from "../../Constants";
 import { AppWrap } from "../../Wrapper";
+import { request, gql } from "graphql-request";
 
 const Header = () => {
+  const [skills, setSkills] = useState();
+  const [user, setUser] = useState();
+
+  async function getSkills() {
+    const document = gql`
+      {
+        skills(orderBy: position_DESC, first: 3) {
+          name
+          icon {
+            height
+            url
+            width
+          }
+        }
+      }
+    `;
+
+    const res = await request(process.env.REACT_APP_API, document);
+
+    setSkills(res.skills);
+  }
+
+  async function getUser() {
+    const document = gql`
+      {
+        userInfos {
+          picture {
+            url
+            width
+            height
+          }
+          number
+          email
+        }
+      }
+    `;
+
+    const res = await request(process.env.REACT_APP_API, document);
+
+    setUser(res.userInfos[0]);
+  }
+
   const scaleVariant = {
     whileInView: {
       scale: [0, 1],
@@ -15,6 +58,15 @@ const Header = () => {
       },
     },
   };
+
+  useEffect(() => {
+    getSkills();
+    getUser();
+  }, []);
+
+  if (!user || !skills) {
+    return <></>;
+  }
 
   return (
     <div className="app__header app__flex">
@@ -33,7 +85,6 @@ const Header = () => {
           </div>
           <div className="tag-cmp app__flex">
             <p className="p-text">Web Developer</p>
-            <p className="p-text">Freelancer</p>
           </div>
         </div>
       </motion.div>
@@ -42,7 +93,7 @@ const Header = () => {
         transition={{ duration: 0.5, delayChildren: 0.5 }}
         className="app__header-img"
       >
-        <img src={images.profile} alt="profile_bg" />
+        <img src={user.picture.url} alt="profile_bg" />
         <motion.img
           whileInView={{ scale: [0, 1] }}
           transition={{ duration: 1, ease: "easeInOut" }}
@@ -56,11 +107,12 @@ const Header = () => {
         whileInView={scaleVariant.whileInView}
         className="app__header-circle"
       >
-        {[images.react, images.redux, images.flutter].map((circle, index) => (
-          <div className="circle-cmp app__flex" key={`circle-${index}`}>
-            <img src={circle} alt="circle" />
-          </div>
-        ))}
+        {skills &&
+          skills.map((circle, index) => (
+            <div className="circle-cmp app__flex" key={`circle-${index}`}>
+              <img src={circle.icon.url} alt="circle" />
+            </div>
+          ))}
       </motion.div>
     </div>
   );
